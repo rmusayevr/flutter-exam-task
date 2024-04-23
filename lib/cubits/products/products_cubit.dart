@@ -7,17 +7,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../data/services/remote/product_service.dart';
 
-
 class ProductsCubit extends Cubit<ProductsState> {
   ProductsCubit() : super(ProductsInitial());
 
-  ProductResponse? result;
+  final ProductService _productService = ProductService();
+
+  List<ProductResponse>? allProducts;
+  final List<ProductResponse> deletedProducts = [];
 
   void getProductInfo() async {
     try {
       emit(ProductsLoading());
-      result = await ProductService.getProducts();
-      emit(ProductsSuccess(response: result!));
+      allProducts = await _productService.getProducts();
+      emit(ProductsSuccess(products: allProducts ?? []));
     } on SocketException catch (e) {
       log('SocketException: $e');
       emit(ProductsNetworkError(errorMessage: 'No Internet'));
@@ -25,5 +27,16 @@ class ProductsCubit extends Cubit<ProductsState> {
       log('catch: $e');
       emit(ProductsFailure(errorMessage: 'Error Occurred'));
     }
+  }
+
+  void removeProduct(int id) {
+    allProducts!.removeWhere((product) {
+      if (product.id == id) {
+        deletedProducts.add(product);
+        return true;
+      }
+      return false;
+    });
+    emit(ProductsSuccess(products: allProducts!));
   }
 }

@@ -7,9 +7,9 @@ final class ProductsInitial extends ProductsState {}
 final class ProductsLoading extends ProductsState {}
 
 final class ProductsSuccess extends ProductsState {
-  ProductsSuccess({required this.response});
+  ProductsSuccess({required this.products});
 
-  final ProductResponse response;
+  final List<ProductResponse> products;
 }
 
 final class ProductsFailure extends ProductsState {
