@@ -39,4 +39,15 @@ class ProductsCubit extends Cubit<ProductsState> {
     });
     emit(ProductsSuccess(products: allProducts!));
   }
+
+  void deleteProducts() {
+    deletedProducts.clear();
+    emit(ProductsSuccess(products: allProducts!));
+  }
+
+  void recoveryProduct(int id, ProductResponse product) {
+    allProducts!.insert(0, product);
+    deletedProducts.removeWhere((product) => (product.id == id));
+    emit(ProductsSuccess(products: allProducts!));
+  }
 }

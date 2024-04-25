@@ -6,30 +6,33 @@ class Products extends StatelessWidget {
     super.key,
     required this.product,
     this.onPressed,
+    required this.icon,
   });
 
   final ProductResponse product;
   final void Function()? onPressed;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return SizedBox(
+      height: 250,
       child: Column(
         children: [
-          Image.network(
-            product.image!,
-            fit: BoxFit.fill,
-            height: 75,
+          IconButton(
+            onPressed: onPressed,
+            icon: Icon(icon),
+          ),
+          SizedBox(
+            width: 80,
+            height: 80,
+            child: Image.network(product.image!),
           ),
           Text(
             product.title!,
-            style: const TextStyle(fontSize: 10),
+            maxLines: 2,
           ),
-          Text(product.price!.toStringAsPrecision(3)),
-          IconButton(
-            onPressed: onPressed,
-            icon: const Icon(Icons.remove_circle_outline_rounded),
-          )
+          Text(product.price.toString()),
         ],
       ),
     );
